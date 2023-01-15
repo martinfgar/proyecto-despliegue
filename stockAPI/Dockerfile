@@ -1,5 +1,6 @@
 FROM php:8.1-apache 
 
+WORKDIR /var/www/html
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 RUN  apt-get update
 RUN apt install unzip -y
@@ -13,10 +14,9 @@ RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . /var/www/html
-RUN cd /var/www/html
-RUN mv .env.example .env
+RUN ["mv",".env.example",".env"]
 RUN composer install && php artisan key:generate 
 RUN chmod o+w ./storage/ -R
 # ENTRYPOINT ["/tmp/run.sh"]
-WORKDIR /var/www/html
-# CMD  php artisan migrate && php artisan passport:install 
+
+# CMD php artisan migrate && php artisan passport:install 
