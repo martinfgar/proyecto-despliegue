@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
+use App\Console\Commands\CreateStock;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
@@ -16,7 +17,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('stocks:create')->weekdays()->everyMinute()->timezone('Europe/Madrid');//->between('9:00','17:00');
+        $schedule->command(CreateStock::class)->weekdays()->everyMinute()->timezone('Europe/Madrid');//->between('9:00','17:00');
     }
     
     protected function scheduleTimezone()

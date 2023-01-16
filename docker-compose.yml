@@ -18,6 +18,7 @@ services:
   adminer:
     image: adminer
     restart: always
+    container_name: adminer
     ports:
       - 8081:8080
     networks:
@@ -27,23 +28,41 @@ services:
   laravel-api:
     build:
       context: './stockAPI'
+      args:
+        - DB_HOST=db
+        - DB_PORT=3306
+        - DB_DATABASE=db
+        - DB_USERNAME=dbuser
+        - DB_PASSWORD=secret
     container_name: laravel-api
-    #restart: always
-    tty: true
-    environment:
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_DATABASE=db
-      - DB_USERNAME=dbuser
-      - DB_PASSWORD=secret
     # volumes:
       # - ./stockAPI:/var/www/html
     ports:
       - 8000:80
+    depends_on:
+      - db
     networks:
       backend:
         aliases:
           - laravel-api
+  data-creator:
+    build:
+      context: './dataCreator'
+      args:
+        - DB_HOST=db
+        - DB_PORT=3306
+        - DB_DATABASE=db
+        - DB_USERNAME=dbuser
+        - DB_PASSWORD=secret
+    container_name: data-creator
+    entrypoint: ['bash', "-c", "cron -f"]
+    depends_on:
+      - db
+      - laravel-api
+    networks:
+      backend:
+        aliases:
+          - data-creator
 networks:
   backend:
     name: backend-network
