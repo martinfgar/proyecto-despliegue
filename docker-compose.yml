@@ -35,10 +35,6 @@ services:
         - DB_USERNAME=dbuser
         - DB_PASSWORD=secret
     container_name: laravel-api
-    # volumes:
-      # - ./stockAPI:/var/www/html
-    ports:
-      - 8000:80
     depends_on:
       - db
     networks:
@@ -63,6 +59,36 @@ services:
       backend:
         aliases:
           - data-creator
+  frontend:
+    image: php:8.1-apache 
+    container_name: frontend
+    volumes:
+      - ./frontend:/var/www/html
+    environment:
+      - APIURL=http://localhost:8000
+    networks:
+      backend:
+        aliases:
+          - frontend
+  proxy:
+    image: nginx
+    container_name: proxy
+    volumes:
+      - ./nginx:/etc/nginx/templates
+    # environment:
+      # - NGINX_HOST=localhost
+      # - NGINX_PORT=80
+    ports:
+      - "8000:80"
+    depends_on:
+      - db
+      - laravel-api
+      - data-creator
+      - frontend
+    networks:
+      backend:
+        aliases:
+          - proxy
 networks:
   backend:
     name: backend-network

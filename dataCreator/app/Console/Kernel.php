@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command(CreateStock::class)->weekdays()->everyMinute()->timezone('Europe/Madrid');//->between('9:00','17:00');
+        $schedule->command(CreateStock::class)->weekdays()->everyMinute()->timezone('Europe/Madrid')->between('9:00','17:00');
     }
     
     protected function scheduleTimezone()

@@ -1,0 +1,15 @@
+
+upstream laravelapi {
+    server laravel-api:80;
+}
+
+server {
+    listen       80;
+    listen  [::]:80;
+    location /api{ 
+        proxy_pass http://laravelapi/api;
+    }
+    location / {
+        proxy_pass http://frontend;
+    }
+ }
