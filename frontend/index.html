@@ -383,9 +383,11 @@
 
   setInterval(async () => {
     await refreshData()
+    resetTimer()
   }, 60 * 1000)
 
   refreshData()
+  resetTimer()
 
   function getCookie(name) {
     var cookieArr = document.cookie.split(";");
@@ -532,8 +534,6 @@
 
   document.getElementById('logOut').addEventListener('click', () => eraseCookie('access_token'))
 
-
-
   document.getElementById('loginForm').addEventListener('submit', async () => {
     event.preventDefault()
     const res = await logIn()
@@ -588,10 +588,10 @@
       empresa['valores'] = await fetchStockData(empresa.id)
     }
     UpdateCardsEmpresas()
-    resetTimer()
   }
 
 
 </script>
+
 
 </html>

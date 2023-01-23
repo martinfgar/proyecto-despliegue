@@ -4,7 +4,7 @@
    ```
     docker compose up -d
    ```
-2. Si queremos crear el esquema de la base de datos (usamos la que se crea con el docker compose):
+2. Si queremos crear el esquema de la base de datos (usamos la BD que se crea con el docker compose):
    ```
     docker exec -it laravel-api sh -c "php artisan migrate && php artisan passport:install"
    ```
