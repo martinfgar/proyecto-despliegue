@@ -32,11 +32,6 @@ services:
     build:
       dockerfile: Dockerfile.api
       args:
-        - DB_HOST=${DB_HOST}
-        - DB_PORT=${DB_PORT}
-        - DB_DATABASE=${DB_DATABASE}
-        - DB_USERNAME=${DB_USERNAME}
-        - DB_PASSWORD=${DB_PASSWORD}
         - DEPLOYMENT_KEY=${DEPLOYMENT_KEY}
     container_name: laravel-api
     depends_on:
@@ -49,11 +44,6 @@ services:
     build:
       dockerfile: Dockerfile.data
       args:
-        - DB_HOST=${DB_HOST}
-        - DB_PORT=${DB_PORT}
-        - DB_DATABASE=${DB_DATABASE}
-        - DB_USERNAME=${DB_USERNAME}
-        - DB_PASSWORD=${DB_PASSWORD}
         - DEPLOYMENT_KEY=${DEPLOYMENT_KEY}
     container_name: data-creator
     entrypoint: ['bash', "-c", "cron -f"]
@@ -71,7 +61,7 @@ services:
         - DEPLOYMENT_KEY=${DEPLOYMENT_KEY}
     container_name: frontend
     environment:
-      - APIURL=${APIURL}
+      - APIURL=${APP_URL}
     networks:
       backend:
         aliases:
@@ -85,7 +75,7 @@ services:
       # - NGINX_HOST=localhost
       # - NGINX_PORT=80
     ports:
-      - "8000:80"
+      - ${PUBLISH_PORT}:80
     depends_on:
       - db
       - laravel-api
