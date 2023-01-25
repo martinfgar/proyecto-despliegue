@@ -1,0 +1,26 @@
+FROM php:8.1-cli
+
+
+ARG DB_HOST
+ARG DB_PORT
+ARG DB_DATABASE
+ARG DB_USERNAME
+ARG DB_PASSWORD
+ARG DEPLOYMENT_KEY
+RUN docker-php-ext-install mysqli pdo pdo_mysql
+RUN apt-get update && apt-get -y install cron
+RUN apt install unzip -y
+RUN apt install git -y
+ENV COMPOSER_ALLOW_SUPERUSER=1
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN mkdir /project
+WORKDIR /project
+RUN git clone https://oauth2:${DEPLOYMENT_KEY}@github.com/martinfgar/dataCreator.git  /project
+
+COPY .env /project/.env
+RUN touch cron.log
+RUN echo "* * * * * cd /project && /usr/local/bin/php artisan schedule:run >> /project/cron.log 2>&1" >> /etc/cron.d/crontab
+RUN chmod 0644 /etc/cron.d/crontab
+RUN composer install && php artisan key:generate 
+RUN chmod o+w ./storage/ -R
+RUN /usr/bin/crontab /etc/cron.d/crontab
