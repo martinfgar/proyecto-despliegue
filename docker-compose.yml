@@ -5,27 +5,18 @@ services:
     image: mysql
     restart: always
     container_name: db
-    command: --default-authentication-plugin=mysql_native_password
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - TZ=${TZ}
-    networks:
-      backend:
-        aliases:
-          - db
   adminer:
     image: adminer
     restart: always
     container_name: adminer
     ports:
       - 8081:8080
-    networks:
-      backend:
-        aliases:
-          - adminer
   laravel-api:
     build:
       dockerfile: Dockerfile.api
@@ -34,10 +25,6 @@ services:
     container_name: laravel-api
     depends_on:
       - db
-    networks:
-      backend:
-        aliases:
-          - laravel-api
   data-creator:
     build:
       dockerfile: Dockerfile.data
@@ -48,10 +35,6 @@ services:
     depends_on:
       - db
       - laravel-api
-    networks:
-      backend:
-        aliases:
-          - data-creator
   frontend:
     build:
       dockerfile: Dockerfile.front
@@ -60,31 +43,14 @@ services:
     container_name: frontend
     environment:
       - APIURL=${APP_URL}
-    networks:
-      backend:
-        aliases:
-          - frontend
   proxy:
     build:
       dockerfile: Dockerfile.proxy
-    # image: nginx
     container_name: proxy
     volumes:
       - ./nginx:/etc/nginx/templates
-    # environment:
-      # - NGINX_HOST=localhost
-      # - NGINX_PORT=80
     ports:
       - ${PUBLISH_PORT}:443
     depends_on:
-      - db
       - laravel-api
-      - data-creator
       - frontend
-    networks:
-      backend:
-        aliases:
-          - proxy
-networks:
-  backend:
-    name: backend-network
