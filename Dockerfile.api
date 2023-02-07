@@ -16,7 +16,7 @@ RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN git clone https://oauth2:${DEPLOYMENT_KEY}@github.com/martinfgar/stockAPI.git  /var/www/html
+RUN git clone https://oauth2:${DEPLOYMENT_KEY}@github.com/martinfgar/proyecto-api.git  /var/www/html
 COPY .env /var/www/html/.env
 RUN composer install && php artisan key:generate 
 RUN chmod o+w ./storage/ -R

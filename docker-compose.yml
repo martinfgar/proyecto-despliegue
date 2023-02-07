@@ -11,6 +11,8 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - TZ=${TZ}
+    volumes:
+      - ./data:/var/lib/mysql
   adminer:
     image: adminer
     restart: always

@@ -3,4 +3,4 @@ ARG DEPLOYMENT_KEY
 WORKDIR /var/www/html
 RUN  apt-get update
 RUN apt install git -y
-RUN git clone https://oauth2:${DEPLOYMENT_KEY}@github.com/martinfgar/frontend.git  /var/www/html
+RUN git clone https://oauth2:${DEPLOYMENT_KEY}@github.com/martinfgar/proyecto-frontend.git  /var/www/html
